@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css" />
+    <script src="main.js" defer></script>
+    <title>To Do List</title>
+</head>
+
+<body>
+
+    <div class="all-projects">
+
+        <div class="projects-list-title">My To Do</div>
+        <form action="" data-new-project-form>
+            <input type="text" class="new-project-input" placeholder="new to do name" required/>
+            <button class="btn-new-project">+</button>
+        </form>
+
+        <div class="project-list-container">
+
+            <ul class="project-list">
+            </ul> 
+           
+
+        </div>       
+
+    </div>
+
+    <div class="todo-list-container">        
+
+        <div class="todo-content">
+
+            <div class="todo-header">
+
+                <div class="todo-header-up">
+                    <div class="todo-title"></div>
+                    <div class="todo-buttons">
+                        <button class="btn-delete-project">Delete project</button>
+                        <button class="btn-delete-complete">Delete completed tasks</button>
+                    </div>
+                   
+                </div>
+    
+                <p class="task-count"></p>
+            </div>
+
+            <div class="all-tasks">
+    
+            </div>
+
+        </div>        
+
+    </div>
+
+    <div class="new-task-container">
+
+        <div class="newtask">
+
+            <form action="" class="new-task-form">
+
+                <div class="new-task">
+    
+                    <div class="new-task-div">
+                        <div class="new-task-title">What to do...</div>
+                    </div>
+    
+                    <div class="new-task-div">
+                        <div class="label-div">Task:</div>
+                        <input type="text" class="new-task-title-input" placeholder="groceries shoppping" required/>
+                    </div>
+                    <div class="new-task-div">
+                        <div class="label-div">Details:</div>
+                        <textarea class="new-task-details" spellcheck="false" placeholder="buy apples, lemon,.."
+                            id="new-task-details"></textarea>
+                    </div>
+    
+    
+    
+                    <div class="new-task-div">
+                        <div class="label-div">Due Date:</div>
+                        <input type="date" class="new-task-date" required="">
+                    </div>
+    
+                    <div class="new-task-div">
+                        <div class="label-div">Priority:</div>
+                        <input type="radio" id="create-new-low" name="create-new-priority" value="low" required="">
+                        <label for="create-new-low">Low</label>
+    
+                        <input type="radio" id="create-new-medium" name="create-new-priority" value="medium" required="">
+                        <label for="create-new-medium">Medium</label>
+    
+                        <input type="radio" id="create-new-high" name="create-new-priority" value="high" required>
+                        <label for="create-new-high">High</label>
+                    </div>
+                    <div class="new-task-div new-add">
+                        <button type="submit" id="btn-add-task">Add</button>
+                    </div>
+    
+                </div>
+    
+    
+            </form>
+        </div>
+
+        
+
+        <div class="edit-task-container edit-not-active">
+
+            <form action="" class="edit-task-form">
+    
+                <div class="edit-task">
+
+                    <div class="edit-task-div">
+                        <div class="edit-task-title">Editing...</div>
+                    </div>
+    
+                    <div class="edit-task-div">
+                        <div class="label-div">Task:</div>
+                        <input type="text" class="edit-task-title-input"required/>
+                    </div>
+                    <div class="edit-task-div">
+                        <div class="label-div">Details:</div>
+                        <textarea class="edit-task-details" spellcheck="false" id="edit-task-details"></textarea>
+                    </div>
+    
+    
+    
+                    <div class="edit-task-div">
+                        <div class="label-div">Due Date:</div>
+                        <input type="date" class="edit-task-date" required="">
+                    </div>
+    
+                    <div class="edit-task-div">
+                        <div class="label-div">Priority:</div>
+                        <input type="radio" id="edit-low" name="edit-priority" value="low" required="">
+                        <label for="edit-low">Low</label>
+    
+                        <input type="radio" id="edit-medium" name="edit-priority" value="medium" required="">
+                        <label for="edit-medium">Medium</label>
+    
+                        <input type="radio" id="edit-high" name="edit-priority" value="high" required>
+                        <label for="edit-high">High</label>
+                    </div>
+                    <div class="edit-task-div save-edit">
+                        <button type="submit" id="btn-edit-task">Save</button>
+                    </div>
+                   
+    
+                </div>
+    
+    
+            </form>
+
+            <div class="edit-task-div cancel-edit">
+                <button id="btn-cancel-edit-task">Cancel</button>
+            </div>
+    
+        </div>
+
+    </div>
+
+
+    <div></div>
+
+    <template id="task-template">
+
+        <div class="task">
+
+            <div class="task-row">
+
+                <div class="task-name">
+                    <input type="checkbox" />
+                    <label></label>
+                </div>
+
+                <div class="task-date"></div>
+    
+                <div class="task-buttons">
+                    <div>
+                        <img class="btn-task-details" src="img/details.svg" />
+                        <img class="btn-task-edit" src="img/edit.svg" />
+                        <button class="btn-task-delete"></button>
+                    </div>
+                   
+                </div>
+    
+
+            </div>
+
+            <div class="task-details-row" >
+
+                
+                <div class="task-notes"></div>
+                <div class="task-priority"></div>
+
+            </div>
+           
+
+        </div>
+
+    </template>
+
+    <footer>
+        <a href="https://github.com/WanSha00"><p>Copyright © 2023 WanSha00</p></a>
+        
+    </footer>
+</body>
+
+</html>
