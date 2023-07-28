@@ -1,5 +1,5 @@
 const projectContainer = document.querySelector(".project-list");
-const newProjectForm = document.querySelector('[data-new-project-form]');
+const newProjectForm = document.querySelector("[data-new-project-form]");
 const newProjectInput = document.querySelector(".new-project-input");
 const deleteProjectButton = document.querySelector(".btn-delete-project");
 const newProjectButton = document.querySelector(".btn-new-project");
@@ -26,422 +26,395 @@ const editTaskNote = document.querySelector(".edit-task-details");
 const editTaskPriority = document.getElementsByName("edit-priority");
 const editTaskButton = document.querySelector("#btn-edit-task");
 
-let projects = JSON.parse(localStorage.getItem('project.lists')) || [];
-let selectedProjectId = localStorage.getItem('project.selectedListId');
+let projects = JSON.parse(localStorage.getItem("project.lists")) || [];
+let selectedProjectId = localStorage.getItem("project.selectedListId");
+let idToEdit = "";
 
 //update selected project
-projectContainer.addEventListener('click', e => {
+projectContainer.addEventListener("click", (e) => {
+  if (e.target.tagName.toLowerCase() === "li") {
+    selectedProjectId = e.target.dataset.projId;
 
-    if (e.target.tagName.toLowerCase() === 'li') {
-
-        selectedProjectId = e.target.dataset.projId;
-
-        save();
-        render();
-    }
-})
+    save();
+    render();
+  }
+});
 
 //update incomplete task count
-tasksContainer.addEventListener('click', e => {
+tasksContainer.addEventListener("click", (e) => {
+  if (e.target.tagName.toLowerCase() === "input") {
+    const selectedProject = projects.find(
+      (project) => project.id === selectedProjectId
+    );
+    const selectedTask = selectedProject.tasks.find(
+      (task) => task.id === e.target.id
+    );
+    selectedTask.complete = e.target.checked;
 
-    if (e.target.tagName.toLowerCase() === 'input') {
-
-        const selectedProject = projects.find(project => project.id === selectedProjectId);
-        const selectedTask = selectedProject.tasks.find(task => task.id === e.target.id);
-        selectedTask.complete = e.target.checked;
-
-        save();
-        renderTaskCount(selectedProject);
-    }
-})
+    save();
+    renderTaskCount(selectedProject);
+  }
+});
 
 //delete all completed tasks
-taskDeleteButton.addEventListener('click', e => {
+taskDeleteButton.addEventListener("click", (e) => {
+  let selectedProject = projects.find(
+    (project) => project.id === selectedProjectId
+  );
+  const completedTaskCount = selectedProject.tasks.filter(
+    (task) => task.complete
+  ).length;
 
-    let selectedProject = projects.find(project => project.id === selectedProjectId);
-    const completedTaskCount = selectedProject.tasks.filter(task => task.complete).length;
+  if (completedTaskCount === 0) {
+    alert("No completed task to delete");
+  } else {
+    selectedProject = projects.find(
+      (project) => project.id === selectedProjectId
+    );
+    selectedProject.tasks = selectedProject.tasks.filter(
+      (task) => !task.complete
+    );
 
-    if (completedTaskCount === 0) {
-
-        alert("No completed task to delete");
-
-    } else {
-
-        selectedProject = projects.find(project => project.id === selectedProjectId);
-        selectedProject.tasks = selectedProject.tasks.filter(task => !task.complete);
-
-        save();
-        render();
-    }
-
-})
+    save();
+    render();
+  }
+});
 
 //open specific task details
-tasksContainer.addEventListener('click', e => {
+tasksContainer.addEventListener("click", (e) => {
+  if (e.target.classList.contains("btn-task-details")) {
+    const id = e.target.id.split("-");
+    const details = document.getElementById("row-" + id[1]);
 
-    if (e.target.classList.contains('btn-task-details')) {
-
-        const id = e.target.id.split("-");
-        const details = document.getElementById("row-" + id[1]);
-
-        details.classList.toggle("active-details");
-
-    }
-})
+    details.classList.toggle("active-details");
+  }
+});
 
 function disableMode() {
+  deleteProjectButton.disabled = true;
+  taskDeleteButton.disabled = true;
+  newProjectButton.disabled = true;
+  newTaskButton.disabled = true;
 
-    deleteProjectButton.disabled = true;
-    taskDeleteButton.disabled = true;
-    newProjectButton.disabled = true;
-    newTaskButton.disabled = true;
+  let deleteTaskButtons = document.querySelectorAll(".btn-task-delete");
+  deleteTaskButtons.forEach((btn) => (btn.disabled = true));
 
-    let deleteTaskButtons = document.querySelectorAll(".btn-task-delete");
-    deleteTaskButtons.forEach(btn => btn.disabled = true);
-
-    let checkbox = document.getElementsByTagName("input");
-    for (i = 0; i < checkbox.length; i++) {
-        if (checkbox[i].type == "checkbox") {
-            checkbox[i].disabled = true;
-        }
-
+  let checkbox = document.getElementsByTagName("input");
+  for (i = 0; i < checkbox.length; i++) {
+    if (checkbox[i].type == "checkbox") {
+      checkbox[i].disabled = true;
     }
+  }
 }
 
 function enableMode() {
+  deleteProjectButton.disabled = false;
+  taskDeleteButton.disabled = false;
+  newProjectButton.disabled = false;
+  newTaskButton.disabled = false;
 
-    deleteProjectButton.disabled = false;
-    taskDeleteButton.disabled = false;
-    newProjectButton.disabled = false;
-    newTaskButton.disabled = false;
+  let deleteTaskButtons = document.querySelectorAll(".btn-task-delete");
+  deleteTaskButtons.forEach((btn) => (btn.disabled = false));
 
-    let deleteTaskButtons = document.querySelectorAll(".btn-task-delete");
-    deleteTaskButtons.forEach(btn => btn.disabled = false);
-
-    let checkbox = document.getElementsByTagName("input");
-    for (i = 0; i < checkbox.length; i++) {
-        if (checkbox[i].type == "checkbox") {
-            checkbox[i].disabled = false;
-        }
-
+  let checkbox = document.getElementsByTagName("input");
+  for (i = 0; i < checkbox.length; i++) {
+    if (checkbox[i].type == "checkbox") {
+      checkbox[i].disabled = false;
     }
+  }
 }
 
 function editMode(selectedTask) {
+  projectContainer.classList.add("project-list-none");
 
-    projectContainer.classList.add("project-list-none");
+  const editContainer = document.querySelector(".edit-task-container");
+  const newContainer = document.querySelector(".newtask");
 
-    const editContainer = document.querySelector(".edit-task-container");
-    const newContainer = document.querySelector(".newtask");
+  editContainer.classList.remove("edit-not-active");
+  newContainer.classList.add("new-not-active");
 
-    editContainer.classList.remove("edit-not-active");
-    newContainer.classList.add("new-not-active");
+  //populate with edit inputs
+  editTaskInput.value = selectedTask.name;
+  editTaskNote.value = selectedTask.notes;
+  editTaskDate.value = selectedTask.dueDate;
 
-    //populate with edit inputs
-    editTaskInput.value = selectedTask.name;
-    editTaskNote.value = selectedTask.notes;
-    editTaskDate.value = selectedTask.dueDate;
-
-    for (i = 0; i < editTaskPriority.length; i++) {
-
-        if (editTaskPriority[i].value == selectedTask.priority) {
-            editTaskPriority[i].checked = true;
-        }
-
+  for (i = 0; i < editTaskPriority.length; i++) {
+    if (editTaskPriority[i].value == selectedTask.priority) {
+      editTaskPriority[i].checked = true;
     }
-
+  }
 }
 
 function exitEditMode() {
+  const editContainer = document.querySelector(".edit-task-container");
+  const newContainer = document.querySelector(".newtask");
 
-    const editContainer = document.querySelector(".edit-task-container");
-    const newContainer = document.querySelector(".newtask");
+  editContainer.classList.add("edit-not-active");
+  newContainer.classList.remove("new-not-active");
 
-    editContainer.classList.add("edit-not-active");
-    newContainer.classList.remove("new-not-active");
+  enableMode();
 
-    enableMode();
-
-    projectContainer.classList.remove("project-list-none");
-
+  projectContainer.classList.remove("project-list-none");
 }
 
 //open specific edit details
-tasksContainer.addEventListener('click', e => {
+tasksContainer.addEventListener("click", (e) => {
+  if (e.target.classList.contains("btn-task-edit")) {
+    disableMode();
 
-    if (e.target.classList.contains('btn-task-edit')) {
+    let idArr = e.target.id.split("-");
+    idToEdit = idArr[1];
 
-        disableMode();
+    const selectedProject = projects.find(
+      (project) => project.id === selectedProjectId
+    );
+    let selectedTask = selectedProject.tasks.find(
+      (task) => task.id === idToEdit
+    );
 
-        let idArr = e.target.id.split("-");
-        let idToEdit = idArr[1];
+    editMode(selectedTask);
 
-        const selectedProject = projects.find(project => project.id === selectedProjectId);
-        let selectedTask = selectedProject.tasks.find(task => task.id === idToEdit);
+    //submit edit details
+    editTaskForm.addEventListener("submit", (e) => {
+      e.preventDefault();
 
-        editMode(selectedTask);
+      const taskName = editTaskInput.value;
+      const taskDate = editTaskDate.value;
+      const taskNote = editTaskNote.value;
 
-        //submit edit details
-        editTaskForm.addEventListener('submit', e => {
+      let taskPriority = "";
 
-            e.preventDefault();
+      for (i = 0; i < editTaskPriority.length; i++) {
+        if (editTaskPriority[i].checked) {
+          taskPriority = editTaskPriority[i].value;
+        }
+      }
 
-            selectedTask = selectedProject.tasks.find(task => task.id === idToEdit);
+      let selectedTask = selectedProject.tasks.find(
+        (task) => task.id === idToEdit
+      );
 
-            const taskName = editTaskInput.value;
-            const taskDate = editTaskDate.value;
-            const taskNote = editTaskNote.value;
+      selectedTask.name = taskName;
+      selectedTask.notes = taskNote;
+      selectedTask.dueDate = taskDate;
+      selectedTask.priority = taskPriority;
 
-            let taskPriority = "";
+      save();
+      exitEditMode();
+      render();
+      
+    });
 
-            for (i = 0; i < editTaskPriority.length; i++) {
-
-                if (editTaskPriority[i].checked) {
-                    taskPriority = editTaskPriority[i].value;
-                }
-
-            }
-
-            selectedTask.name = taskName;
-            selectedTask.notes = taskNote;
-            selectedTask.dueDate = taskDate;
-            selectedTask.priority = taskPriority;
-
-            save();
-            exitEditMode();
-            render();
-        })
-
-
-        //cancel edit button
-        const cancelEditButton = document.querySelector("#btn-cancel-edit-task");
-        cancelEditButton.addEventListener('click', () => {
-            exitEditMode();
-        })
-
-    }
-})
+    //cancel edit button
+    const cancelEditButton = document.querySelector("#btn-cancel-edit-task");
+    cancelEditButton.addEventListener("click", () => {
+      exitEditMode();
+    });
+  }
+});
 
 //delete individual task
-tasksContainer.addEventListener('click', e => {
+tasksContainer.addEventListener("click", (e) => {
+  if (e.target.classList.contains("btn-task-delete")) {
+    let idArr = e.target.id.split("-");
+    let idToDelete = idArr[1];
 
-    if (e.target.classList.contains('btn-task-delete')) {
+    const selectedProject = projects.find(
+      (project) => project.id === selectedProjectId
+    );
+    selectedProject.tasks = selectedProject.tasks.filter(
+      (task) => task.id !== idToDelete
+    );
 
-        let idArr = e.target.id.split("-");
-        let idToDelete = idArr[1];
-
-        const selectedProject = projects.find(project => project.id === selectedProjectId);
-        selectedProject.tasks = selectedProject.tasks.filter(task => task.id !== idToDelete)
-
-        save();
-        render();
-
-    }
-})
+    save();
+    render();
+  }
+});
 
 //delete selected project
-deleteProjectButton.addEventListener('click', e => {
+deleteProjectButton.addEventListener("click", (e) => {
+  projects = projects.filter((project) => project.id !== selectedProjectId);
+  selectedProjectId = null;
 
-    projects = projects.filter(project => project.id !== selectedProjectId);
-    selectedProjectId = null;
-
-    save();
-    render();
-
-})
+  save();
+  render();
+});
 
 //add new project
-newProjectForm.addEventListener('submit', e => {
+newProjectForm.addEventListener("submit", (e) => {
+  e.preventDefault();
 
-    e.preventDefault();
+  const projectName = newProjectInput.value;
+  const project = createProject(projectName);
 
-    const projectName = newProjectInput.value;
-    const project = createProject(projectName);
+  newProjectInput.value = null;
+  projects.push(project);
 
-    newProjectInput.value = null;
-    projects.push(project);
-
-    save();
-    render();
-})
-
+  save();
+  render();
+});
 
 //add new task
-newTaskForm.addEventListener('submit', e => {
+newTaskForm.addEventListener("submit", (e) => {
+  e.preventDefault();
 
-    e.preventDefault();
+  if (selectedProjectId == "null" || selectedProjectId === null) {
+    alert("Please select a project to add the new task.");
+    return;
+  }
 
-    if (selectedProjectId == "null" || selectedProjectId === null) {
+  const taskName = newTaskInput.value;
+  const taskDate = newTaskDate.value;
+  const taskNote = newTaskNote.value;
+  let taskPriority = "";
 
-        alert("Please select a project to add the new task.");
-        return;
+  for (i = 0; i < newTaskPriority.length; i++) {
+    if (newTaskPriority[i].checked) {
+      taskPriority = newTaskPriority[i].value;
     }
+  }
 
-    const taskName = newTaskInput.value;
-    const taskDate = newTaskDate.value;
-    const taskNote = newTaskNote.value;
-    let taskPriority = "";
+  if (taskName == null || taskName === "") return;
 
-    for (i = 0; i < newTaskPriority.length; i++) {
+  const task = createTask(taskName, taskNote, taskDate, taskPriority);
+  newTaskInput.value = null;
+  newTaskNote.value = null;
 
-        if (newTaskPriority[i].checked) {
-            taskPriority = newTaskPriority[i].value;
-        }
+  const selectedProject = projects.find(
+    (project) => project.id === selectedProjectId
+  );
+  selectedProject.tasks.push(task);
 
-    }
-
-    if (taskName == null || taskName === '') return;
-
-    const task = createTask(taskName, taskNote, taskDate, taskPriority);
-    newTaskInput.value = null;
-    newTaskNote.value = null;
-
-    const selectedProject = projects.find(project => project.id === selectedProjectId);
-    selectedProject.tasks.push(task);
-
-    save();
-    render();
-})
+  save();
+  render();
+});
 
 //create new project
 function createProject(name) {
-    return {
-        id: Date.now().toString(),
-        name: name,
-        tasks: []
-    }
+  return {
+    id: Date.now().toString(),
+    name: name,
+    tasks: [],
+  };
 }
 
 //create new task
 function createTask(name, notes, date, priority) {
-    return {
-        id: Date.now().toString(),
-        name: name,
-        complete: false,
-        dueDate: date,
-        notes: notes,
-        priority: priority
-    }
+  return {
+    id: Date.now().toString(),
+    name: name,
+    complete: false,
+    dueDate: date,
+    notes: notes,
+    priority: priority,
+  };
 }
 
 //save project lists and selected project id
 function save() {
-    localStorage.setItem('project.lists', JSON.stringify(projects));
-    localStorage.setItem('project.selectedListId', selectedProjectId);
+  localStorage.setItem("project.lists", JSON.stringify(projects));
+  localStorage.setItem("project.selectedListId", selectedProjectId);
 }
 
 //render content
 function render() {
+  clearElement(projectContainer);
+  renderProjectLists();
 
-    clearElement(projectContainer);
-    renderProjectLists();
+  const selectedProject = projects.find(
+    (project) => project.id === selectedProjectId
+  );
 
-    const selectedProject = projects.find(project => project.id === selectedProjectId);
-
-    //check if having selected project to display the project to do
-    if (selectedProjectId == "null" || selectedProjectId === null) {
-
-        projectDisplayContainer.style.display = 'none';
-
-    } else {
-
-        projectDisplayContainer.style.display = '';
-        projectTitleElement.innerText = selectedProject.name;
-        renderTaskCount(selectedProject);
-        clearElement(tasksContainer);
-        renderTasks(selectedProject);
-
-    }
-
+  //check if having selected project to display the project to do
+  if (selectedProjectId == "null" || selectedProjectId === null) {
+    projectDisplayContainer.style.display = "none";
+  } else {
+    projectDisplayContainer.style.display = "";
+    projectTitleElement.innerText = selectedProject.name;
+    renderTaskCount(selectedProject);
+    clearElement(tasksContainer);
+    renderTasks(selectedProject);
+  }
 }
 
 //render task
 function renderTasks(selectedProject) {
+  selectedProject.tasks.forEach((task) => {
+    const taskElement = document.importNode(taskTemplate.content, true);
 
-    selectedProject.tasks.forEach(task => {
+    const taskRow = taskElement.querySelector(".task-row");
 
-        const taskElement = document.importNode(taskTemplate.content, true);
+    if (task.priority == "low") {
+      taskRow.classList.add("task-low");
+    } else if (task.priority == "medium") {
+      taskRow.classList.add("task-medium");
+    } else {
+      taskRow.classList.add("task-high");
+    }
 
-        const taskRow = taskElement.querySelector(".task-row");
+    const checkbox = taskElement.querySelector("input");
+    checkbox.id = task.id;
+    checkbox.checked = task.complete;
 
-        if (task.priority == "low") {
-            taskRow.classList.add("task-low");
-        } else if (task.priority == "medium") {
-            taskRow.classList.add("task-medium");
-        } else {
-            taskRow.classList.add("task-high");
-        }
+    const label = taskElement.querySelector("label");
+    label.htmlFor = task.id;
+    label.append(task.name);
 
-        const checkbox = taskElement.querySelector("input");
-        checkbox.id = task.id;
-        checkbox.checked = task.complete;
+    const date = taskElement.querySelector(".task-date");
+    date.append(task.dueDate);
 
-        const label = taskElement.querySelector("label");
-        label.htmlFor = task.id;
-        label.append(task.name);
+    const priority = taskElement.querySelector(".task-priority");
+    priority.append(task.priority);
 
-        const date = taskElement.querySelector(".task-date");
-        date.append(task.dueDate);
+    const notes = taskElement.querySelector(".task-notes");
+    notes.append(task.notes);
 
-        const priority = taskElement.querySelector(".task-priority");
-        priority.append(task.priority);
+    const detailsButton = taskElement.querySelector(".btn-task-details");
+    detailsButton.id = "details-" + task.id;
 
-        const notes = taskElement.querySelector(".task-notes");
-        notes.append(task.notes);
+    const editButton = taskElement.querySelector(".btn-task-edit");
+    editButton.id = "edit-" + task.id;
 
-        const detailsButton = taskElement.querySelector(".btn-task-details");
-        detailsButton.id = "details-" + task.id;
+    const deleteButton = taskElement.querySelector(".btn-task-delete");
+    deleteButton.id = "delete-" + task.id;
 
-        const editButton = taskElement.querySelector(".btn-task-edit");
-        editButton.id = "edit-" + task.id;
+    const detailsRow = taskElement.querySelector(".task-details-row");
+    detailsRow.id = "row-" + task.id;
 
-        const deleteButton = taskElement.querySelector(".btn-task-delete");
-        deleteButton.id = "delete-" + task.id;
-
-        const detailsRow = taskElement.querySelector(".task-details-row");
-        detailsRow.id = "row-" + task.id;
-
-        tasksContainer.appendChild(taskElement);
-
-    })
+    tasksContainer.appendChild(taskElement);
+  });
 }
 
 function renderTaskCount(selectedProject) {
-
-    const incompleteTaskCount = selectedProject.tasks.filter(task => !task.complete).length;
-    const taskString = incompleteTaskCount === 1 ? "task" : "tasks";
-    tasksCountElement.innerText = `${incompleteTaskCount} ${taskString} remaining`;
-
+  const incompleteTaskCount = selectedProject.tasks.filter(
+    (task) => !task.complete
+  ).length;
+  const taskString = incompleteTaskCount === 1 ? "task" : "tasks";
+  tasksCountElement.innerText = `${incompleteTaskCount} ${taskString} remaining`;
 }
 
-
 function renderProjectLists() {
+  //render each project
+  projects.forEach((project) => {
+    const projElement = document.createElement("li");
 
-    //render each project
-    projects.forEach(project => {
+    projElement.dataset.projId = project.id;
+    projElement.classList.add("project-list-name");
+    projElement.innerText = project.name;
 
-        const projElement = document.createElement('li');
+    if (project.id === selectedProjectId) {
+      projElement.classList.add("active-project");
+    }
 
-        projElement.dataset.projId = project.id;
-        projElement.classList.add("project-list-name");
-        projElement.innerText = project.name;
-
-        if (project.id === selectedProjectId) {
-
-            projElement.classList.add("active-project");
-        }
-
-        projectContainer.appendChild(projElement);
-
-    })
+    projectContainer.appendChild(projElement);
+  });
 }
 
 function clearElement(element) {
-
-    while (element.firstChild) {
-        element.removeChild(element.firstChild);
-    }
-
+  while (element.firstChild) {
+    element.removeChild(element.firstChild);
+  }
 }
 
 render();
+
