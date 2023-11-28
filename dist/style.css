@@ -1,325 +1,328 @@
 *,
 *::after,
 *::before {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 body {
-    display: grid;
-    grid-template-columns: 500px 1000px auto;
-    margin: 0;
-    font-size: 20px;
-    background-color: rgb(51, 29, 44);
+  display: grid;
+  grid-template-columns: auto 4fr auto;
+  grid-template-rows: 9fr auto;
+  margin: 0;
+  font-size: 20px;
+  background-color: rgb(51, 29, 44);
+  height: 100vh;
 }
 
 a {
-    text-decoration: none;
+  text-decoration: none;
 }
 
-a:link, a:visited {
-    color: rgb(239, 225, 209);
+a:link,
+a:visited {
+  color: rgb(239, 225, 209);
 }
 
 a:hover {
-    color: rgb(239, 225, 209);
+  color: rgb(239, 225, 209);
 }
 
 button {
-    cursor: pointer;
-    font-size: 20px;
+  cursor: pointer;
+  font-size: 20px;
 }
 
-input, textarea{
-    font-size: 20px;
-    padding: 3px;
-    cursor: pointer;
-    color-scheme: dark;
-}
-
-.all-projects,
-.todo-list-container,
-.new-task-container {
-    height: 1100px;
+input,
+textarea {
+  font-size: 20px;
+  padding: 3px;
+  cursor: pointer;
+  color-scheme: dark;
 }
 
 .all-projects {
-    padding: 30px 50px;
-    padding-top: 80px;
-    padding-right: 0px;
-    background-color: rgb(51, 29, 44);
-    border-right: 5px solid rgb(239, 225, 209);
+  padding-left: 30px;
+  padding-top: 80px;
+  padding-right: 10px;
+  background-color: rgb(51, 29, 44);
+  border-right: 5px solid rgb(239, 225, 209);
 }
 
 .project-list-container {
-    width: 300px;   
+  width: 300px;
 }
 
 .project-list {
-    line-height: 1.7;
-    list-style: circle;
-    cursor: pointer;
-    font-size: 25px;
-    color: rgb(239, 225, 209);    
-
+  line-height: 1.7;
+  list-style: circle;
+  cursor: pointer;
+  font-size: 25px;
+  color: rgb(239, 225, 209);
 }
 
-.project-list-none{
-    display: none;
+.project-list-none {
+  display: none;
 }
 
-.projects-list-title{
-    font-size: 40px;
-    font-weight: bold;
-    margin-bottom: 15px;
-    color: rgb(239, 225, 209);
-    
+.projects-list-title {
+  font-size: 40px;
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: rgb(239, 225, 209);
 }
 
 .project-list-name:hover {
-    font-weight: 700;
-    font-size: 30px;
+  font-weight: 700;
+  font-size: 30px;
 }
 
 .active-project {
-    font-weight: 700;
+  font-weight: 700;
 }
 
-.btn-new-project, #btn-add-task, #btn-edit-task, #btn-cancel-edit-task,
-.btn-delete-project, .btn-delete-complete{
-    color: rgb(239, 225, 209);
-    border: none;
-    background-color: transparent;
-    font-weight: bold;
-    font-size: 30px;
+.btn-new-project,
+#btn-add-task,
+#btn-edit-task,
+#btn-cancel-edit-task,
+.btn-delete-project,
+.btn-delete-complete {
+  color: rgb(239, 225, 209);
+  border: none;
+  background-color: transparent;
+  font-weight: bold;
+  font-size: 30px;
 }
 
-#btn-add-task, #btn-edit-task, #btn-cancel-edit-task, .btn-delete-project, .btn-delete-complete{
-    font-size: 20px;
+#btn-add-task,
+#btn-edit-task,
+#btn-cancel-edit-task,
+.btn-delete-project,
+.btn-delete-complete {
+  font-size: 20px;
 }
 
-.new-project-input{
-    background-color: transparent;
-    border: none;
-    border-bottom: 2px solid rgb(239, 225, 209);
-    color: rgb(239, 225, 209);
+.new-project-input {
+  background-color: transparent;
+  border: none;
+  border-bottom: 2px solid rgb(239, 225, 209);
+  color: rgb(239, 225, 209);
 }
 
 .new-project-input:focus {
-    outline: none;
-    border-bottom: 4px solid rgb(239, 225, 209);
+  outline: none;
+  border-bottom: 4px solid rgb(239, 225, 209);
 }
 
-
 .todo-list-container {
-
-
-    background-color: rgb(63, 46, 62);
-    padding: 30px 50px;
-    
+  background-color: rgb(63, 46, 62);
+  padding: 30px 50px;
 }
 
 .todo-header-up {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .btn-delete-project {
-    margin-right: 50px;
+  margin-right: 50px;
 }
 
-
 .all-tasks {
-    padding: 10px;
+  padding: 10px;
 }
 
 .task {
-
-    display: grid;
-    grid-template-columns: auto;
-    
-
+  display: grid;
+  grid-template-columns: auto;
 }
 
-.todo-title{
-    font-size: 40px;
-    border-bottom: 2px dotted rgb(167, 130, 149);
-    color: rgb(167, 130, 149);
-    font-weight: bold;
+.todo-title {
+  font-size: 40px;
+  border-bottom: 2px dotted rgb(167, 130, 149);
+  color: rgb(167, 130, 149);
+  font-weight: bold;
 }
 
-.task-count{
-    color: rgb(167, 130, 149);
-    font-weight: bold;
+.task-count {
+  color: rgb(167, 130, 149);
+  font-weight: bold;
 }
 
 .task-row {
-    grid-area: 1/1/2/4;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    background-color: rgb(239, 225, 209);
-    justify-content: center;
-    border-bottom: 4px solid rgb(63, 46, 62);
-    border-radius: 10px;
-    font-size: 25px;
-
-    
+  grid-area: 1/1/2/4;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  background-color: rgb(239, 225, 209);
+  justify-content: center;
+  border-bottom: 4px solid rgb(63, 46, 62);
+  border-radius: 10px;
+  font-size: 25px;
 }
 
-.task-low{
-    border-left: 10px solid rgb(0, 165, 0);
+.task-low {
+  border-left: 10px solid rgb(0, 165, 0);
 }
 
-.task-medium{
-    border-left: 10px solid orange;
-
+.task-medium {
+  border-left: 10px solid orange;
 }
 
-.task-high{
-    border-left: 10px solid red;
+.task-high {
+  border-left: 10px solid red;
 }
-
 
 .task-name {
-    grid-column: 1;
+  grid-column: 1;
 }
 
 .task-date {
-
-    grid-column: 2;
-    text-align: center;
+  grid-column: 2;
+  text-align: center;
 }
 
 .task-buttons {
-
-    grid-column: 3;
-    display: flex;
-    justify-content: flex-end;
-    cursor: pointer;
+  grid-column: 3;
+  display: flex;
+  justify-content: flex-end;
+  cursor: pointer;
 }
 
-.btn-task-details, .btn-task-edit{
-    margin-right: 20px;
+.btn-task-details,
+.btn-task-edit {
+  margin-right: 20px;
 }
 
 .task-details-row {
-    grid-area: 2/1/3/4;
-    background-color: rgb(51, 29, 44);
-    color: rgb(239, 225, 209);
-    padding: 10px 20px;
-    display: none;
-    
+  grid-area: 2/1/3/4;
+  background-color: rgb(51, 29, 44);
+  color: rgb(239, 225, 209);
+  padding: 10px 20px;
+  display: none;
 }
 
-[type="checkbox"]:checked+label {
-    opacity: 0.5;
+[type="checkbox"]:checked + label {
+  opacity: 0.5;
 }
 
 .active-details {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
-.task-priority{
-    align-self: flex-end;
-    padding: 0px 5px;
-    font-weight: bold;
-    color: rgb(167, 130, 149);
+.task-priority {
+  align-self: flex-end;
+  padding: 0px 5px;
+  font-weight: bold;
+  color: rgb(167, 130, 149);
 }
 
-.btn-task-details, .btn-task-edit, .btn-task-delete{
-    width: 25px;
-    height: 25px;
+.btn-task-details,
+.btn-task-edit,
+.btn-task-delete {
+  width: 25px;
+  height: 25px;
 }
 
-.task-name, .task-date, .task-buttons{
-    padding: 10px 5px;
+.task-name,
+.task-date,
+.task-buttons {
+  padding: 10px 5px;
 }
 
-.btn-task-delete{
-
-    background-image: url("img/delete.svg");
-    border: none;
-    background-color: transparent;
+.btn-task-delete {
+  background-image: url("img/delete.svg");
+  border: none;
+  background-color: transparent;
 }
 
-.btn-task-delete:disabled{
-    background-image: none;
+.btn-task-delete:disabled {
+  background-image: none;
 }
 
-
-
-.new-task-title, .edit-task-title{
-    font-size: 30px;
-    font-weight: bold;
+.new-task-title,
+.edit-task-title {
+  font-size: 30px;
+  font-weight: bold;
 }
 
 .new-task-container {
-    width: 1fr;
-    display: flex;
-    flex-direction: column;
-    background-color: rgb(51, 29, 44);
-    padding: 30px 50px;
-    border-left: 5px solid rgb(239, 225, 209);
-    color: rgb(239, 225, 209);
+  width: 1fr;
+  display: flex;
+  flex-direction: column;
+  background-color: rgb(51, 29, 44);
+  padding: 30px 50px;
+  border-left: 5px solid rgb(239, 225, 209);
+  color: rgb(239, 225, 209);
 }
 
-.new-task-title-input, .new-task-details, .new-task-date,
-.edit-task-title-input, .edit-task-details, .edit-task-date{
-    background-color: transparent;
-    border: none;
-    border-bottom: 2px solid rgb(239, 225, 209);
-    color: rgb(239, 225, 209);
+.new-task-title-input,
+.new-task-details,
+.new-task-date,
+.edit-task-title-input,
+.edit-task-details,
+.edit-task-date {
+  background-color: transparent;
+  border: none;
+  border-bottom: 2px solid rgb(239, 225, 209);
+  color: rgb(239, 225, 209);
 }
 
-.new-task-title-input:focus, .new-task-details:focus, .new-task-date:focus,
-.edit-task-title-input:focus, .edit-task-details:focus, .edit-task-date:focus{
-    outline: none;
-    border-bottom: 3px solid rgb(239, 225, 209);
+.new-task-title-input:focus,
+.new-task-details:focus,
+.new-task-date:focus,
+.edit-task-title-input:focus,
+.edit-task-details:focus,
+.edit-task-date:focus {
+  outline: none;
+  border-bottom: 3px solid rgb(239, 225, 209);
 }
 
-.new-task-details, .edit-task-details{
-    height: 200px;
-    width: 300px;
+.new-task-details,
+.edit-task-details {
+  height: 200px;
+  width: 300px;
 }
 
-.new-task-div, .edit-task-div {
-    margin-bottom: 15px;
+.new-task-div,
+.edit-task-div {
+  margin-bottom: 15px;
 }
 
-.label-div{
-    margin-bottom: 5px;
-    font-weight: bold;
+.label-div {
+  margin-bottom: 5px;
+  font-weight: bold;
 }
 
-.edit-task-container{
-    width: 1fr;
-    display: flex;
-    flex-direction: column;
-    background-color: rgb(51, 29, 44);
-    margin-top: 50px;
+.edit-task-container {
+  width: 1fr;
+  display: flex;
+  flex-direction: column;
+  background-color: rgb(51, 29, 44);
+  margin-top: 50px;
 }
 
-.edit-not-active, .new-not-active{
-    display: none;
+.edit-not-active,
+.new-not-active {
+  display: none;
 }
 
-.save-edit, .new-add{
-    margin-top: 50px;
-    margin-left: 250px;
+.save-edit,
+.new-add {
+  margin-top: 50px;
+  margin-left: 250px;
 }
 
-.cancel-edit{
-    margin-left: 250px;
+.cancel-edit {
+  margin-left: 250px;
 }
 
-.task-notes{
-    white-space: pre-wrap;
+.task-notes {
+  white-space: pre-wrap;
 }
 
 footer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
